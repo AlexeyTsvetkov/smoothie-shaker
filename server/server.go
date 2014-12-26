@@ -64,9 +64,11 @@ func (serv *Server) Listen() {
 		case result := <-serv.results:
 			if conn, ok := serv.jobConn[result.job]; ok {
 				writer := bufio.NewWriter(conn)
-				log.Print(result.msg)
-				writer.WriteString(result.msg)
-				conn.Close()
+				go func() {
+					writer.WriteString(result.msg)
+					writer.Flush()
+					conn.Close()
+					}()
 			} else {
 				log.Fatal("Could not find connection for job")
 			}

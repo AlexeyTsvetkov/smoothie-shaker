@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"time"
 	"io"
 )
 
@@ -41,7 +40,6 @@ func (client *Client) Run() {
 	}
 
 	log.Printf("Client %d got: %s", client.id, response)
-	time.Sleep(5 * time.Second)
 }
 
 func RunClient(id int, out chan<- int) {
@@ -62,6 +60,7 @@ func RunClient(id int, out chan<- int) {
 	}
 
 	client.Run()
+	conn.Close()
 	out <- id
 }
 
