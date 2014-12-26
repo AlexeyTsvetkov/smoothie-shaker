@@ -8,6 +8,8 @@ import (
 	"io"
 )
 
+const maxClients int = 100
+
 type Client struct {
 	id     int
 	reader *bufio.Reader
@@ -63,8 +65,6 @@ func RunClient(id int, out chan<- int) {
 	conn.Close()
 	out <- id
 }
-
-const maxClients int = 10
 
 func main() {
 	id := 0

@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"runtime"
 )
 
 const maxJobsBuffer int = 50
 const maxConnsBuffer int = 50
+const maxWorkersCount int = 100
 
 type Job struct {
 	msg string
@@ -103,6 +105,7 @@ func NewServer(conns chan net.Conn, workersCount int) *Server {
 }
 
 func main() {
+	runtime.GOMAXPROCS(4)
 	listener, err := net.Listen("tcp", "localhost:5432")
 
 	if err != nil {
@@ -111,7 +114,7 @@ func main() {
 
 	defer listener.Close()
 	conns := make(chan net.Conn, maxConnsBuffer)
-	serv := NewServer(conns, 5)
+	serv := NewServer(conns, maxWorkersCount)
 	go serv.Listen()
 
 	for {
