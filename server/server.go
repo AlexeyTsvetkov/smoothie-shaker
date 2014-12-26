@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"code.google.com/p/go.crypto/bcrypt"
 	"log"
 	"net"
 	"runtime"
@@ -11,6 +11,7 @@ import (
 const maxJobsBuffer int = 50
 const maxConnsBuffer int = 50
 const maxWorkersCount int = 100
+const hashCost int = 10
 
 type Job struct {
 	msg string
@@ -31,8 +32,10 @@ func (worker *Worker) Run() {
 	for {
 		select {
 		case job := <-worker.jobs:
+			bytes := []byte(job.msg)
+			hashed, _ := bcrypt.GenerateFromPassword(bytes, hashCost)
 			result := &Result{
-				msg: fmt.Sprintf("Worker %d: %s\n", worker.id, job.msg),
+				msg: string(hashed) + "\n",
 				job: job,
 			}
 			worker.results <- result
