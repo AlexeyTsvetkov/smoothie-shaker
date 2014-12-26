@@ -3,9 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
-	"io"
 )
 
 const maxClients int = 100
@@ -70,7 +70,7 @@ func main() {
 	id := 0
 	clients := 0
 	out := make(chan int, maxClients)
-	
+
 	for {
 		for clients < maxClients {
 			id += 1

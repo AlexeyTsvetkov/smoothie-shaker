@@ -42,10 +42,10 @@ func (worker *Worker) Run() {
 
 type Server struct {
 	jobConn map[*Job]net.Conn
-	jobs      chan<- *Job
-	results   <-chan *Result
-	conns     <-chan net.Conn
-	workers   []*Worker
+	jobs    chan<- *Job
+	results <-chan *Result
+	conns   <-chan net.Conn
+	workers []*Worker
 }
 
 func (serv *Server) Listen() {
@@ -70,7 +70,7 @@ func (serv *Server) Listen() {
 					writer.WriteString(result.msg)
 					writer.Flush()
 					conn.Close()
-					}()
+				}()
 			} else {
 				log.Fatal("Could not find connection for job")
 			}
@@ -95,10 +95,10 @@ func NewServer(conns chan net.Conn, workersCount int) *Server {
 
 	serv := &Server{
 		jobConn: make(map[*Job]net.Conn),
-		jobs:      jobs,
-		results:   results,
-		conns:     conns,
-		workers:   workers,
+		jobs:    jobs,
+		results: results,
+		conns:   conns,
+		workers: workers,
 	}
 
 	return serv
